@@ -1,0 +1,85 @@
+{
+  "name": "matrix-synapse-admin-api",
+  "version": "1.0.0",
+  "description": "A typescript implementation of the Matrix Synapse Admin API",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "watch": "tsc -w -p ./tsconfig.build.json",
+    "test": "mocha -r ts-node/register test/**/*.test.ts",
+    "test:coverage": "nyc npm run test",
+    "coverage": "nyc --all --reporter=lcov npm test",
+    "orval": "orval",
+    "build": "rm -Rf ./dist && rm -Rf ./src/types && npm run orval && tsc -p ./tsconfig.build.json && cp package.json ./dist && cp README.md ./dist",
+    "dist": "rm -Rf ./dist && npm run build && cd dist && npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/macornwell/matrix-synapse-admin-api.git"
+  },
+  "keywords": [
+    "matrix",
+    "synapse",
+    "admin",
+    "api"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "bugs": {
+    "url": "https://github.com/macornwell/matrix-synapse-admin-api/issues"
+  },
+  "nyc": {
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "check-coverage": true,
+    "all": true,
+    "include": [
+      "src/**/!(*.test.*).[tj]s?(x)"
+    ],
+    "exclude": [
+      "src/_tests_/**/*.*"
+    ],
+    "reporter": [
+      "html",
+      "lcov",
+      "text",
+      "text-summary"
+    ],
+    "report-dir": "coverage"
+  },
+  "author": "Mike Cornwell",
+  "license": "GPL-3.0-or-later",
+  "homepage": "https://github.com/macornwell/matrix-synapse-admin-api#readme",
+  "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@types/argparse": "^2.0.10",
+    "@types/chai": "^4.3.0",
+    "@types/lodash": "^4.14.177",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.11.7",
+    "@types/request": "^2.48.8",
+    "@types/sinon": "^10.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.7.0",
+    "argparse": "^2.0.1",
+    "babel-eslint": "^10.1.0",
+    "chai": "^4.3.0",
+    "cucumber": "^7.0.0-rc.0",
+    "eslint": "^7.19.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-functional": "^3.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0",
+    "sinon": "^11.1.2",
+    "source-map-support": "^0.5.21",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.9.5"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "lodash": "^4.17.21",
+    "matrix-js-sdk": "^20.0.0",
+    "node-fetch": "^2.6.1",
+    "request": "^2.88.2"
+  }
+}

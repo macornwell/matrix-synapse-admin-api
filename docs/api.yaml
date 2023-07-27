@@ -1,0 +1,144 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: Matrix Synapse Admin Api
+  description: The Admin Api for a Matrix Synapse server.
+paths:
+  /_synapse/admin/v2/users:
+    get:
+      operationId: getUsers
+      description: This API returns all local user accounts. By default, the response is ordered by ascending user ID.
+      parameters:
+        - in: query
+          name: user_id
+          schema:
+            type: string
+          required: false
+          description: 'Is optional and filters to only return users with user IDs that contain this value. This parameter is ignored when using the name parameter.'
+        - in: query
+          name: name
+          schema:
+            type: string
+          required: false
+          description: 'Is optional and filters to only return users with user ID localparts or displaynames that contain this value.'
+        - in: query
+          name: guests
+          schema:
+            type: boolean
+          required: false
+          description: 'string representing a bool - Is optional and if false will exclude guest users. Defaults to true to include guest users.'
+        - in: query
+          name: deactivated
+          schema:
+            type: boolean
+          required: false
+          description: 'string representing a bool - Is optional and if true will include deactivated users. Defaults to false to exclude deactivated users.'
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+          description: 'string representing a positive integer - Is optional but is used for pagination, denoting the maximum number of items to return in this call. Defaults to 100.'
+        - in: query
+          name: from
+          schema:
+            type: integer
+          required: false
+          description: 'string representing a positive integer - Is optional but used for pagination, denoting the offset in the returned results. This should be treated as an opaque value and not explicitly set to anything other than the return value of next_token from a previous call. Defaults to 0.'
+        - in: query
+          name: order_by
+          schema:
+            type: string
+          required: false
+          description: 'The method by which to sort the returned list of users. If the ordered field has duplicates, the second order is always by ascending name, which guarantees a stable ordering. Valid values are:'
+      responses:
+        '200':
+          description: 'Successful response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsersResponseObject'
+
+  /_synapse/admin/v1/join/{room_id_or_alias}:
+    post:
+      operationId: joinRoom
+      description: 'This API allows an administrator to join an user account with a given user_id to a room with a given room_id_or_alias. You can only modify the membership of local users. The server administrator must be in the room and have permission to invite users.'
+      parameters:
+        - in: path
+          name: room_id_or_alias
+          schema:
+            type: string
+          required: true
+          description: 'The room identifier or alias to join: for example, !636q39766251:server.com.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JoinRoomRequest'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  room_id:
+                    type: string
+
+components:
+  schemas:
+    JoinRoomRequest:
+      description: A Join Room Request
+      type: object
+      properties:
+        user_id:
+          type: string
+          description: 'Fully qualified user: for example, @user:server.com.'
+      required:
+        - user_id
+    User:
+      type: object
+      properties:
+        name:
+          type: string
+        is_guest:
+          type: boolean
+        admin:
+          type: boolean
+        user_type:
+          type: string
+        deactivated:
+          type: boolean
+        erased:
+          type: boolean
+        shadow_banned:
+          type: boolean
+        displayname:
+          type: string
+        avatar_url:
+          type: string
+        creation_ts:
+          type: integer
+
+    UsersResponseObject:
+      type: object
+      properties:
+        next_token:
+          type: string
+        total:
+          type: integer
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
