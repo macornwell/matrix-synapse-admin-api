@@ -9,7 +9,7 @@ const sdk = require('matrix-js-sdk')
 const _parseArgs = () => {
   const parser = new ArgumentParser({
     description:
-      'Logs into the Api and provides a bearer token. Provided as a helpful tool for using the api.',
+      'Logs into the Api and provides an access token. Provided as a helpful tool for using the api and having never logged in before.',
   })
   parser.add_argument('hostname', { help: 'The hostname to use.' })
   parser.add_argument('-u', '--username', {

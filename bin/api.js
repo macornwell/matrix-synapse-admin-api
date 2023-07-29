@@ -7,7 +7,7 @@ const _parseArgs = () => {
     description: 'Runs a command from the api from the cli.',
   })
   parser.add_argument('hostname', { help: 'The hostname to use.' })
-  parser.add_argument('bearerToken', { help: 'The bearer token to use.' })
+  parser.add_argument('accessToken', { help: 'The access token to use.' })
   parser.add_argument('command', { help: 'The command to run' })
   parser.add_argument('-d', '--data', {
     help: 'JSON inputs for the command',
@@ -30,7 +30,7 @@ const main = async () => {
     https: !args.http,
     baseEndpoint: args.baseEndpoint,
     hostname: args.hostname,
-    bearerToken: args.bearerToken,
+    accessToken: args.accessToken,
   })
 
   const rawData = JSON.parse(args.data)

@@ -6,19 +6,19 @@ let theBearerToken = ''
 
 export type Arguments = {
   hostname: string
-  bearerToken: string
+  accessToken: string
   baseEndpoint?: string
   https?: boolean
 }
 
 export const init = ({
-  bearerToken,
+  accessToken,
   hostname,
   baseEndpoint = '/_synapse/admin',
   https = true,
 }: Arguments) => {
   theBaseUrl = `${https ? 'https' : 'http'}://${hostname}${baseEndpoint}`
-  theBearerToken = bearerToken
+  theBearerToken = accessToken 
 }
 
 export const customInstance = <T>(

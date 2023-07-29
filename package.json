@@ -1,6 +1,6 @@
 {
   "name": "matrix-synapse-admin-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A typescript implementation of the Matrix Synapse Admin API",
   "main": "index.js",
   "types": "index.d.ts",
