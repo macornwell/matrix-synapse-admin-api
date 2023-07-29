@@ -8,12 +8,12 @@ export default defineConfig({
         mutator: {
           path: '../custom-instance.ts',
           name: 'customInstance',
-        }
+        },
       },
       workspace: './src/types',
       target: './api.ts',
       client: 'axios-functions',
       mode: 'split',
-    }
-  }
+    },
+  },
 })

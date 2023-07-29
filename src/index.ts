@@ -1,11 +1,10 @@
 export * from './types/api.schemas'
-import { init, Arguments, PasswordLogin } from './custom-instance'
+import { init as subInit, Arguments } from './custom-instance'
 import * as funcs from './types/api'
 
-
-export const login = async (args:Arguments&PasswordLogin) => {
-  await init(args)
+export const create = (args: Arguments) => {
+  subInit(args)
   return {
-    ...funcs
+    ...funcs,
   }
 }

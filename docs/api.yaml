@@ -1,11 +1,21 @@
-openapi: 3.0.3
+openapi: 3.0.1
 info:
   version: 1.0.0
   title: Matrix Synapse Admin Api
   description: The Admin Api for a Matrix Synapse server.
+servers:
+  - url: https://{domain}:{port}/_synapse/admin
+    variables:
+      domain:
+        default: 'matrix.org'
+        description: 'The domain for the synapse server'
+      port:
+        default: '443'
 paths:
-  /_synapse/admin/v2/users:
+  /v2/users:
     get:
+      tags:
+        - Users
       operationId: getUsers
       description: This API returns all local user accounts. By default, the response is ordered by ascending user ID.
       parameters:
@@ -59,8 +69,74 @@ paths:
               schema:
                 $ref: '#/components/schemas/UsersResponseObject'
 
-  /_synapse/admin/v1/join/{room_id_or_alias}:
+  /v1/rooms:
+    get:
+      tags:
+        - Rooms
+      operationId: getRooms
+      description: 'The List Room admin API allows server admins to get a list of rooms on their server. '
+      parameters:
+        - in: query
+          name: from
+          description: 'Offset in the returned list. Defaults to 0.'
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: limit
+          description: 'Maximum amount of rooms to return. Defaults to 100.'
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: order_by
+          description: 'The method in which to sort the returned list of rooms.'
+          required: false
+          schema:
+            type: string
+            enum:
+              - alphabetical
+              - size
+              - name
+              - canonical_alias
+              - joined_members
+              - joined_local_members
+              - version
+              - creator
+              - encryption
+              - federatable
+              - public
+              - join_rules
+              - guest_access
+              - history_visibility
+              - state_events
+        - in: query
+          name: dir
+          description: 'Direction of room order. Either f for forwards or b for backwards. Setting this value to b will reverse the above sort order. Defaults to f.'
+          required: false
+          schema:
+            type: string
+            enum:
+              - 'f'
+              - 'b'
+        - in: query
+          name: search_term
+          required: false
+          description: 'Filter rooms by their room name, canonical alias and room id.'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomsResponse'
+
+  /v1/join/{room_id_or_alias}:
     post:
+      tags:
+        - Rooms
       operationId: joinRoom
       description: 'This API allows an administrator to join an user account with a given user_id to a room with a given room_id_or_alias. You can only modify the membership of local users. The server administrator must be in the room and have permission to invite users.'
       parameters:
@@ -133,6 +209,70 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/User'
+
+    Room:
+      type: object
+      properties:
+        room_id:
+          type: string
+        name:
+          type: string
+        canonical_alias:
+          type: string
+        joined_members:
+          type: integer
+        joined_local_members:
+          type: integer
+        version:
+          type: string
+        creator:
+          type: string
+        encryption:
+          type: string
+        federatable:
+          type: string
+        public:
+          type: string
+        join_rules:
+          type: string
+          enum:
+            - public
+            - knock
+            - invite
+            - private
+        guest_access:
+          type: string
+          enum:
+            - can_join
+            - forbidden
+        history_visibility:
+          type: string
+          enum:
+            - invited
+            - joined
+            - shared
+            - world_readable
+        state_events:
+          type: integer
+        room_type:
+          type: string
+          nullable: true
+
+    RoomsResponse:
+      type: object
+      properties:
+        offset:
+          type: integer
+        total_rooms:
+          type: integer
+        next_batch:
+          type: integer
+        prev_batch:
+          type: integer
+        rooms:
+          type: array
+          items:
+            $ref: '#/components/schemas/Room'
 
   securitySchemes:
     bearerAuth:
