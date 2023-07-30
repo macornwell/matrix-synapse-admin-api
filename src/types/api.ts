@@ -6,6 +6,7 @@
  * OpenAPI spec version: 1.0.0
  */
 import type {
+  UserRequest,
   UsersResponseObject,
   GetUsersParams,
   RoomsResponse,
@@ -26,6 +27,21 @@ import { customInstance } from '../custom-instance';
 
 
   /**
+ * This API allows an administrator to create or modify a user account with a specific user_id.
+ */
+export const putUser = (
+    userId: string,
+    userRequest: UserRequest,
+ options?: SecondParameter<typeof customInstance>,) => {
+      return customInstance<void>(
+      {url: `/v2/users/${userId}`, method: 'put',
+      headers: {'Content-Type': 'application/json', },
+      data: userRequest
+    },
+      options);
+    }
+  
+/**
  * This API returns all local user accounts. By default, the response is ordered by ascending user ID.
  */
 export const getUsers = (
@@ -66,6 +82,7 @@ export const joinRoom = (
       options);
     }
   
+export type PutUserResult = NonNullable<Awaited<ReturnType<typeof putUser>>>
 export type GetUsersResult = NonNullable<Awaited<ReturnType<typeof getUsers>>>
 export type GetRoomsResult = NonNullable<Awaited<ReturnType<typeof getRooms>>>
 export type JoinRoomResult = NonNullable<Awaited<ReturnType<typeof joinRoom>>>

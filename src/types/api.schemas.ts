@@ -94,6 +94,14 @@ from?: number;
 order_by?: string;
 };
 
+export interface RoomsResponse {
+  offset?: number;
+  total_rooms?: number;
+  next_batch?: number;
+  prev_batch?: number;
+  rooms?: Room[];
+}
+
 export type RoomHistoryVisibility = typeof RoomHistoryVisibility[keyof typeof RoomHistoryVisibility];
 
 
@@ -143,12 +151,50 @@ export interface Room {
   room_type?: string | null;
 }
 
-export interface RoomsResponse {
-  offset?: number;
-  total_rooms?: number;
-  next_batch?: number;
-  prev_batch?: number;
-  rooms?: Room[];
+export interface UsersResponseObject {
+  next_token?: string;
+  total?: number;
+  users?: User[];
+}
+
+export interface ExternalId {
+  auth_provider: string;
+  external_id: string;
+}
+
+export type ThreePidMedium = typeof ThreePidMedium[keyof typeof ThreePidMedium];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const ThreePidMedium = {
+  email: 'email',
+  msisdn: 'msisdn',
+} as const;
+
+export interface ThreePid {
+  medium: ThreePidMedium;
+  address: string;
+}
+
+export interface UserRequest {
+  /** If provided, the user's password is updated and all devices are logged out, unless logout_devices is set to false. */
+  password?: string;
+  /** If set to false, devices aren't logged out even when password is provided. */
+  logout_devices?: boolean;
+  /** If set to an empty string (""), the user's display name will be removed. */
+  displayname?: string;
+  /** Must be a MXC URI. If set to an empty string (""), the user's avatar is removed. */
+  avatar_url?: string;
+  /** If provided, the user's third-party IDs (email, msisdn) are entirely replaced with the given list. Each item in the array is an object with the following fields: */
+  threepids?: ThreePid[];
+  /** Allow setting the identifier of the external identity provider for SSO (Single sign-on). More details are in the configuration manual under the sections sso and oidc_providers. */
+  external_ids?: ExternalId[];
+  /** Whether the user is a homeserver administrator, granting them access to the Admin API, among other things. */
+  admin?: boolean;
+  /** If unspecified, deactivation state will be left unchanged. */
+  deactivated?: boolean;
+  /** If not provided, the user type will be not be changed. If null is given, the user type will be cleared. Other allowed options are: bot and support. */
+  user_type?: string | null;
 }
 
 export interface User {
@@ -162,12 +208,6 @@ export interface User {
   displayname?: string;
   avatar_url?: string;
   creation_ts?: number;
-}
-
-export interface UsersResponseObject {
-  next_token?: string;
-  total?: number;
-  users?: User[];
 }
 
 /**
